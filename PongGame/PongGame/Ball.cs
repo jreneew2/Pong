@@ -40,8 +40,8 @@ namespace PongGame
 
         public void UpdateBoundingBox()
         {
-            boundingBox.X = (int)ballPosition.X - ballTexture.Width / 2;
-            boundingBox.Y = (int)ballPosition.Y - ballTexture.Height / 2;
+            boundingBox.X = (int)ballPosition.X - ballTexture.Width / 2; // - (ballTexture.Width % 2);
+            boundingBox.Y = (int)ballPosition.Y - ballTexture.Height / 2; //- (ballTexture.Height % 2);
         }
 
         public override void Draw(SpriteBatch batch, bool drawBoundingBox)
@@ -55,13 +55,13 @@ namespace PongGame
 
         public void CalculatePosition(float deltaTime)
         {
-            UpdateBoundingBox();
+            
             Console.WriteLine("BallTexture Bounds: " + boundingBox.ToString());
             if(boundingBox.Right >= windowSizeX || boundingBox.Left <= 0)
             {
                 ballVelocity.X *= -1f;
             }
-            if(boundingBox.Bottom >= windowSizeY || boundingBox.Top <= 0)
+            if (boundingBox.Bottom >= windowSizeY || boundingBox.Top <= 0)
             {
                 ballVelocity.Y *= -1f;
             }
@@ -72,6 +72,7 @@ namespace PongGame
             ballPosition.X = ballPosition.X + ballVelocity.X * deltaTime;
             ballPosition.Y = ballPosition.Y + ballVelocity.Y * deltaTime;
 
+            UpdateBoundingBox(); //moved update position
         }
     }
 }
