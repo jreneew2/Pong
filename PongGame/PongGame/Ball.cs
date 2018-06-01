@@ -19,7 +19,7 @@ namespace PongGame
         private float maxVelocity = 200;
         private float maxAcceleration = 2000;
 
-        public Ball(int spawnX, int spawnY)
+        public Ball(int spawnX, int spawnY) 
         {
             ballPosition.X = spawnX;
             ballPosition.Y = spawnY;
@@ -38,11 +38,17 @@ namespace PongGame
 
         public void CalculatePosition(float deltaTime)
         {
+            if(ballPosition.Y > 670) //ball stops without bouncing if position is 680 or 720
+            {
+                ballVelocity.Y *= -0.8f;
+            }
+
             ballVelocity.X = ballVelocity.X + ballAcceleration.X * deltaTime;
             ballVelocity.Y = ballVelocity.Y + ballAcceleration.Y * deltaTime;
 
             ballPosition.X = ballPosition.X + ballVelocity.X * deltaTime;
             ballPosition.Y = ballPosition.Y + ballVelocity.Y * deltaTime;
+
         }
     }
 }
