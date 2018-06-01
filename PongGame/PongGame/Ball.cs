@@ -15,32 +15,55 @@ namespace PongGame
         public Texture2D ballTexture;
         private Vector2 ballVelocity;
         private Vector2 ballAcceleration;
+        private int windowSizeX;
+        private int windowSizeY;
+        public Rectangle boundingBox;
+        Texture2D boundingBoxPixelData;
 
-        private float maxVelocity = 200;
-        private float maxAcceleration = 2000;
-
-        public Ball(int spawnX, int spawnY) 
+        public Ball(int spawnX, int spawnY, int WindowSizeX, int WindowSizeY) 
         {
             ballPosition.X = spawnX;
             ballPosition.Y = spawnY;
-            ballAcceleration.Y = 50f;
+            ballVelocity.Y = 500f;
+            ballVelocity.X = 300f;
+            windowSizeX = WindowSizeX;
+            windowSizeY = WindowSizeY;
+            boundingBox = new Rectangle((int)ballPosition.X, (int)ballPosition.Y, 100, 100);
         }
 
-        public override void LoadContent(ContentManager content, string textureName)
+        public override void LoadContent(ContentManager content, string textureName, GraphicsDevice device)
         {
+            boundingBoxPixelData = new Texture2D(device, 1, 1, false, SurfaceFormat.Color);
+            boundingBoxPixelData.SetData(new[] { Color.White });
             ballTexture = content.Load<Texture2D>(textureName);
         }
 
-        public override void Draw(SpriteBatch batch)
+        public void UpdateBoundingBox()
         {
+            boundingBox.X = (int)ballPosition.X - ballTexture.Width / 2;
+            boundingBox.Y = (int)ballPosition.Y - ballTexture.Height / 2;
+        }
+
+        public override void Draw(SpriteBatch batch, bool drawBoundingBox)
+        {
+            if(drawBoundingBox)
+            {
+                DrawBorder(boundingBoxPixelData, batch, boundingBox, 2, Color.Blue);
+            }
             batch.Draw(ballTexture, ballPosition, null, Color.White, 0, new Vector2(ballTexture.Width / 2, ballTexture.Height / 2), 1, SpriteEffects.None, 1);
         }
 
         public void CalculatePosition(float deltaTime)
         {
-            if(ballPosition.Y > 670) //ball stops without bouncing if position is 680 or 720
+            UpdateBoundingBox();
+            Console.WriteLine("BallTexture Bounds: " + boundingBox.ToString());
+            if(boundingBox.Right >= windowSizeX || boundingBox.Left <= 0)
             {
-                ballVelocity.Y *= -0.8f;
+                ballVelocity.X *= -1f;
+            }
+            if(boundingBox.Bottom >= windowSizeY || boundingBox.Top <= 0)
+            {
+                ballVelocity.Y *= -1f;
             }
 
             ballVelocity.X = ballVelocity.X + ballAcceleration.X * deltaTime;

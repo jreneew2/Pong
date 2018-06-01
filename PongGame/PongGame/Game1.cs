@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace PongGame
 {
@@ -11,7 +12,7 @@ namespace PongGame
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-
+        Texture2D pixel;
         Ball ball;
 
         public Game1()
@@ -31,7 +32,7 @@ namespace PongGame
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            ball = new Ball(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
+            ball = new Ball(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
             base.Initialize();
         }
 
@@ -43,7 +44,7 @@ namespace PongGame
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            ball.LoadContent(this.Content, "BallTexture");
+            ball.LoadContent(this.Content, "BallTexture", GraphicsDevice);
             // TODO: use this.Content to load your game content here
         }
 
@@ -82,7 +83,7 @@ namespace PongGame
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
-            ball.Draw(spriteBatch);
+            ball.Draw(spriteBatch, true);
             spriteBatch.End();
             base.Draw(gameTime);
         }
