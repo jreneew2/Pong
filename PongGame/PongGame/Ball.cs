@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -19,8 +15,9 @@ namespace PongGame
         private int windowSizeY;
         public Rectangle boundingBox;
         Texture2D boundingBoxPixelData;
+        private float spriteScale;
 
-        public Ball(int spawnX, int spawnY, int WindowSizeX, int WindowSizeY) 
+        public Ball(int spawnX, int spawnY, int WindowSizeX, int WindowSizeY, float scale=1) 
         {
             ballPosition.X = spawnX;
             ballPosition.Y = spawnY;
@@ -28,7 +25,7 @@ namespace PongGame
             ballVelocity.X = 300f;
             windowSizeX = WindowSizeX;
             windowSizeY = WindowSizeY;
-            boundingBox = new Rectangle((int)ballPosition.X, (int)ballPosition.Y, 100, 100);
+            spriteScale = scale;
         }
 
         public override void LoadContent(ContentManager content, string textureName, GraphicsDevice device)
@@ -36,12 +33,14 @@ namespace PongGame
             boundingBoxPixelData = new Texture2D(device, 1, 1, false, SurfaceFormat.Color);
             boundingBoxPixelData.SetData(new[] { Color.White });
             ballTexture = content.Load<Texture2D>(textureName);
+            boundingBox = new Rectangle((int)ballPosition.X, (int)ballPosition.Y, (int)(ballTexture.Width * spriteScale), (int)(ballTexture.Height * spriteScale));
+            UpdateBoundingBox();
         }
 
         public void UpdateBoundingBox()
         {
-            boundingBox.X = (int)ballPosition.X - ballTexture.Width / 2; // - (ballTexture.Width % 2);
-            boundingBox.Y = (int)ballPosition.Y - ballTexture.Height / 2; //- (ballTexture.Height % 2);
+            boundingBox.X = (int)ballPosition.X - (int)(ballTexture.Width * spriteScale) / 2;
+            boundingBox.Y = (int)ballPosition.Y - (int)(ballTexture.Height * spriteScale) / 2;
         }
 
         public override void Draw(SpriteBatch batch, bool drawBoundingBox)
@@ -50,13 +49,11 @@ namespace PongGame
             {
                 DrawBorder(boundingBoxPixelData, batch, boundingBox, 2, Color.Blue);
             }
-            batch.Draw(ballTexture, ballPosition, null, Color.White, 0, new Vector2(ballTexture.Width / 2, ballTexture.Height / 2), 1, SpriteEffects.None, 1);
+            batch.Draw(ballTexture, ballPosition, null, Color.White, 0, new Vector2(ballTexture.Width / 2, ballTexture.Height / 2), spriteScale, SpriteEffects.None, 1);
         }
 
         public void CalculatePosition(float deltaTime)
         {
-            
-            Console.WriteLine("BallTexture Bounds: " + boundingBox.ToString());
             if(boundingBox.Right >= windowSizeX || boundingBox.Left <= 0)
             {
                 ballVelocity.X *= -1f;

@@ -14,6 +14,10 @@ namespace PongGame
         SpriteBatch spriteBatch;
         Texture2D pixel;
         Ball ball;
+        Paddle player1;
+        Paddle player2;
+        int paddleToWallDist = 100;
+        float paddleSpeed = 700f;
 
         public Game1()
         {
@@ -32,7 +36,10 @@ namespace PongGame
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            ball = new Ball(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+            ball = new Ball(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, .25f);
+            player1 = new Paddle(paddleToWallDist, GraphicsDevice.Viewport.Height / 2, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, .3f);
+            player2 = new Paddle(GraphicsDevice.Viewport.Width - paddleToWallDist, GraphicsDevice.Viewport.Height / 2, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, .3f);
+
             base.Initialize();
         }
 
@@ -45,6 +52,8 @@ namespace PongGame
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             ball.LoadContent(this.Content, "BallTexture", GraphicsDevice);
+            player1.LoadContent(this.Content, "PaddleTexture", GraphicsDevice);
+            player2.LoadContent(this.Content, "PaddleTexture", GraphicsDevice);
             // TODO: use this.Content to load your game content here
         }
 
@@ -70,6 +79,8 @@ namespace PongGame
 
             // TODO: Add your update logic here
             ball.CalculatePosition(dt);
+            player1.CalculatePosition(dt, Keyboard.GetState().IsKeyDown(Keys.S), Keyboard.GetState().IsKeyDown(Keys.W), paddleSpeed);
+            player2.CalculatePosition(dt, Keyboard.GetState().IsKeyDown(Keys.Down), Keyboard.GetState().IsKeyDown(Keys.Up), paddleSpeed);
             base.Update(gameTime);
         }
 
@@ -83,7 +94,9 @@ namespace PongGame
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
-            ball.Draw(spriteBatch, true);
+            ball.Draw(spriteBatch, false);
+            player1.Draw(spriteBatch, false);
+            player2.Draw(spriteBatch, false);
             spriteBatch.End();
             base.Draw(gameTime);
         }
