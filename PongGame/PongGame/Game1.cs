@@ -74,14 +74,17 @@ namespace PongGame
         protected override void Update(GameTime gameTime)
         {
             float dt = (float) gameTime.ElapsedGameTime.TotalSeconds;
+            float p1 = player1.paddlePosition.Y; //gets position of paddle
+            float p2 = player2.paddlePosition.Y;
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
             // TODO: Add your update logic here
-            ball.CalculatePosition(dt);
+            ball.CalculatePosition(dt, p1, p2);
             player1.CalculatePosition(dt, Keyboard.GetState().IsKeyDown(Keys.S), Keyboard.GetState().IsKeyDown(Keys.W), paddleSpeed);
             player2.CalculatePosition(dt, Keyboard.GetState().IsKeyDown(Keys.Down), Keyboard.GetState().IsKeyDown(Keys.Up), paddleSpeed);
             base.Update(gameTime);
+            //Console.WriteLine(player1.paddlePosition.Length());
         }
 
         /// <summary>
