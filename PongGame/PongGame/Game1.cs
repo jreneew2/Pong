@@ -84,7 +84,7 @@ namespace PongGame
             player1.CalculatePosition(dt, Keyboard.GetState().IsKeyDown(Keys.S), Keyboard.GetState().IsKeyDown(Keys.W), paddleSpeed);
             player2.CalculatePosition(dt, Keyboard.GetState().IsKeyDown(Keys.Down), Keyboard.GetState().IsKeyDown(Keys.Up), paddleSpeed);
             base.Update(gameTime);
-            //Console.WriteLine(player1.paddlePosition.Length());
+            Console.WriteLine(player1.paddlePosition.X);
         }
 
         /// <summary>

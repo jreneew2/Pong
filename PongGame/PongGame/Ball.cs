@@ -16,7 +16,7 @@ namespace PongGame
         public Rectangle boundingBox;
         Texture2D boundingBoxPixelData;
         private float spriteScale;
-        private const int maxSpeed = 1500; //caps out at 5x original speed
+        private const int maxSpeed = 1501; //caps out at 5x original speed for
 
         public Ball(int spawnX, int spawnY, int WindowSizeX, int WindowSizeY, float scale=1) 
         {
@@ -62,6 +62,14 @@ namespace PongGame
                 else
                     ballVelocity.X *= -1.03f; //increases speed
             }
+            if ((boundingBox.Right <= 140 && (boundingBox.Bottom >= player1 - 94 && boundingBox.Top <= player1 + 94))) //hard coded what I believe to be the height of the paddle
+            {
+                if (Math.Abs(ballVelocity.X) > maxSpeed) //prevents velocity from getting too high
+                    ballVelocity.X *= -1f;
+                else
+                    ballVelocity.X *= -1.03f; //increases speed
+            }
+
             if (boundingBox.Right >= windowSizeX || boundingBox.Left <= 0)
             {
                 if (Math.Abs(ballVelocity.X) > maxSpeed)
